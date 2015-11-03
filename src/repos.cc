@@ -1762,6 +1762,17 @@ void add_repo(Zypper & zypper, RepoInfo & repo)
         _("(use \"zypper addrepo --priority <integer> ...\" to ensure repositories are utilized as desired,"
           " lower numbers for repositories that replace default packages and higher for missing packages)");
     }
+    else if ( repo.priority() < RepoInfo::defaultPriority() )
+    {
+      s << endl << "  " <<
+        format(_("(use \"zypper dup --from %s\" to change all installed packages to those provided by the new repository)"))
+        % repo.alias();
+    }
+    else if ( repo.priority() > RepoInfo::defaultPriority() )
+    {
+      s << endl << "  " <<
+        _("(use \"zypper in <package>\" to install packages made available by the new repository)");
+    }
   }
   zypper.out().info(s.str());
 
